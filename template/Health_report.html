@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Advanced Health Dashboard</title>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+   <style>
+       :root {
+           --primary: #2563eb;
+           --secondary: #3b82f6;
+           --success: #059669;
+           --warning: #d97706;
+           --danger: #dc2626;
+           --background: #f3f4f6;
+           --card-background: white;
+           --hover-effect: #f0f4f8;
+       }
+
+       body {
+           background: var(--background);
+           font-family: system-ui, -apple-system, sans-serif;
+       }
+
+       .dashboard-container {
+           max-width: 1200px;
+           margin: 2rem auto;
+           padding: 0 1rem;
+       }
+
+       .header-card {
+           background: linear-gradient(135deg, var(--primary), var(--secondary));
+           color: white;
+           border-radius: 1rem;
+           padding: 2rem;
+           margin-bottom: 2rem;
+           box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+       }
+
+       .metric-card {
+           background: var(--card-background);
+           border-radius: 1rem;
+           padding: 1.5rem;
+           margin-bottom: 1.5rem;
+           box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+           transition: transform 0.2s, background 0.3s ease-in-out;
+       }
+
+       .metric-card:hover {
+           transform: translateY(-5px);
+           background: var(--hover-effect);
+       }
+
+       .health-score {
+           font-size: 3.5rem;
+           font-weight: 700;
+           color: var(--primary);
+           text-align: center;
+           line-height: 1;
+       }
+
+       .status-indicator {
+           display: inline-block;
+           padding: 0.5rem 1rem;
+           border-radius: 2rem;
+           font-weight: 600;
+           text-align: center;
+           min-width: 120px;
+       }
+
+       .status-good {
+           background: rgba(5, 150, 105, 0.1);
+           color: var(--success);
+       }
+
+       .status-warning {
+           background: rgba(217, 119, 6, 0.1);
+           color: var(--warning);
+       }
+
+       .status-danger {
+           background: rgba(220, 38, 38, 0.1);
+           color: var(--danger);
+       }
+
+       .aqi-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+           gap: 1rem;
+       }
+
+       .aqi-item {
+           background: rgba(37, 99, 235, 0.05);
+           padding: 0.5rem;
+           border-radius: 0.5rem;
+           text-align: center;
+       }
+
+       .aqi-value {
+           font-size: 1.2rem;
+           font-weight: 600;
+           color: var(--primary);
+       }
+
+       .detail-table td {
+           padding: 1rem;
+           border-bottom: 1px solid #e5e7eb;
+       }
+
+       .alert-custom {
+           border-left: 4px solid var(--warning);
+           background: rgba(217, 119, 6, 0.05);
+       }
+
+       @media (max-width: 768px) {
+           .health-score {
+               font-size: 2.5rem;
+           }
+
+           .aqi-grid {
+               grid-template-columns: 1fr;
+           }
+       }
+   </style>
+</head>
+<body>
+
+   <div class="dashboard-container">
+       <!-- Header -->
+       <div class="header-card">
+           <h1 class="display-5 mb-3">Health Assessment</h1>
+
+           <p class="mb-0 opacity-75">Welcome back, {{ username }}</p>
+       </div>
+
+       <div class="row g-4">
+           <!-- Health Score -->
+           <div class="col-md-4">
+               <div class="metric-card">
+                   <h3 class="text-center mb-4">Overall Health Score</h3>
+                   <div class="health-score mb-3">{{ health_score }}</div>
+                   <div class="text-center">
+                       <span class="status-indicator
+                           {% if health_score >= 80 %}status-good
+                           {% elif health_score >= 60 %}status-warning
+                           {% else %}status-danger{% endif %}">
+                           {{ health_status }}
+                       </span>
+                   </div>
+               </div>
+           </div>
+
+           <!-- Air Quality -->
+           <div class="col-md-8">
+               <div class="metric-card">
+                   <h3 class="mb-4">Air Quality Metrics</h3>
+                   <div class="aqi-grid">
+                       <div class="aqi-item">
+                           <div class="aqi-value" id="co">{{ aqi_data.co_level }}</div>
+                           <div>CO Level</div>
+                       </div>
+                       <div class="aqi-item">
+                           <div class="aqi-value" id="no2">{{ aqi_data.no2_level }}</div>
+                           <div>NO2 Level</div>
+                       </div>
+                       <div class="aqi-item">
+                           <div class="aqi-value" id="pm25">{{ aqi_data.pm25_level }}</div>
+                           <div>PM2.5</div>
+                       </div>
+                       <div class="aqi-item">
+                           <div class="aqi-value" id="pm10">{{ aqi_data.pm10_level }}</div>
+                           <div>PM10</div>
+                       </div>
+                       <div class="aqi-item">
+                           <div class="aqi-value" id="so2">{{ aqi_data.so2_level }}</div>
+                           <div>SO2</div>
+                       </div>
+                       <div class="aqi-item">
+                           <div class="aqi-value" id="nh3">{{ aqi_data.nh3_level }}</div>
+                           <div>NH3</div>
+                       </div>
+
+                   </div>
+               </div>
+           </div>
+
+           {% if alert_message %}
+           <div class="col-12">
+               <div class="alert alert-custom">
+                   <h4 class="alert-heading">Health Alert</h4>
+                   <p class="mb-0">{{ alert_message }}</p>
+               </div>
+           </div>
+           {% endif %}
+
+           <!-- Health Details -->
+        <div class="col-12">
+    <div class="metric-card">
+        <h3 class="mb-4">Detailed Health Assessment</h3>
+        <div class="table-responsive">
+            <table class="table detail-table">
+                <tbody>
+                    {% for label, details in radar_details.items %}
+                    <tr>
+                        <td class="fw-bold" width="30%">{{ label }}</td>
+                        <td>
+                            {% if details and details|length > 0 %}
+                                {{ details|join:", " }}
+                            {% else %}
+                                No data available
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+       </div>
+   </div>
+
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <script>
+      function fetchLatestData() {
+          $.ajax({
+              url: "{% url 'health_report' %}",
+              type: "GET",
+              dataType: "json",
+              headers: { "X-Requested-With": "XMLHttpRequest" },
+              success: function(data) {
+                  if (data.latest_item) {
+                      updateAqiContainer(data.latest_item);
+                  } else {
+                      console.error("No data found in response.");
+                  }
+              },
+              error: function(xhr, status, error) {
+                  console.error("AJAX error:", error);
+              }
+          });
+      }
+
+      function updateAqiContainer(latestItem) {
+          $('#co').text(latestItem.co || 'N/A');
+          $('#no2').text(latestItem.no2 || 'N/A');
+          $('#pm25').text(latestItem.pm25 || 'N/A');
+          $('#pm10').text(latestItem.pm10 || 'N/A');
+          $('#so2').text(latestItem.so2 || 'N/A');
+          $('#nh3').text(latestItem.nh3 || 'N/A');
+          $('#o3').text(latestItem.o3 || 'N/A');
+          $('#date').text(latestItem.date) || 'N/A');
+
+          const aqiValue = parseInt(latestItem.aqi || 0, 10);
+          if (aqiValue <= 50) {
+              $('.aqi-status').text('AQI - GOOD').css('color', '#2ecc71');
+          } else if (aqiValue <= 100) {
+              $('.aqi-status').text('AQI - MODERATE').css('color', '#f1c40f');
+          } else {
+              $('.aqi-status').text('AQI - POOR').css('color', '#e74c3c');
+          }
+      }
+
+      setInterval(fetchLatestData, 5000);
+      $(document).ready(function() {
+          fetchLatestData();
+      });
+   </script>
+</body>
+</html>

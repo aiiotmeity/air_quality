@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% load static %}
+    <meta charset="utf-8" />
+    <title>AQI</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="Free HTML Templates" name="keywords" />
+    <meta content="Free HTML Templates" name="description" />
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon" />
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Flaticon Font -->
+    <link href="{% static 'lib/flaticon/font/flaticon.css' %}" rel="stylesheet" />
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'lib/lightbox/css/lightbox.min.css' %}" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+  </head>
+
+  <body>
+    <!-- Navbar Start -->
+    <div class="container-fluid bg-light position-relative shadow">
+      <nav
+        class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0 px-lg-5"
+      >
+        <a
+          href=""
+          class="navbar-brand font-weight-bold text-secondary"
+          style="font-size: 50px"
+        >
+         <!-- <i class="flaticon-043-teddy-bear"></i>-->
+           <img src="{% static 'image1.jpg' %}" alt="AQI Logo" class="img-fluid" style="height:70px;">
+          <span class="text-primary">AQI</span>
+        </a>
+        <button
+          type="button"
+          class="navbar-toggler"
+          data-toggle="collapse"
+          data-target="#navbarCollapse"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-between"
+          id="navbarCollapse">
+          <div class="navbar-nav font-weight-bold mx-auto py-0">
+            <a href="{% url 'map_view' %}" class="nav-item nav-link active">Home</a>
+            <a href="#about" class="nav-item nav-link">About</a>
+            <a href="#ranks" class="nav-item nav-link">Ranks</a>
+             <a href="{% url 'admin_view' %}" class="nav-item nav-link">Dashboard</a>
+
+              <a href="{% url 'index_test' %}" class="nav-item nav-link">Forecasting</a>
+          <!--  <a href="team.html" class="nav-item nav-link">Services</a>
+            <a href="gallery.html" class="nav-item nav-link">Facilities</a>-->
+         <!--   <div class="nav-item dropdown">
+              <a
+                href="#"
+                class="nav-link dropdown-toggle"
+                data-toggle="dropdown"
+                >Pages</a
+              >
+              <div class="dropdown-menu rounded-0 m-0">
+                <a href="blog.html" class="dropdown-item">Blog Grid</a>
+                <a href="single.html" class="dropdown-item">Blog Detail</a>
+              </div>
+            </div>-->
+            <a href="#contact"  class="nav-item nav-link">Contact</a>
+          </div>
+           <a href="{% url 'logout' %}" class="btn btn-primary px-4">Logout</a>
+          <a href="{% url 'login' %}" class="btn btn-primary px-4">Login</a>
+        </div>
+      </nav>
+    </div>
+    <!-- Navbar End -->
+
+    <!-- Header Start -->
+    <div class="container-fluid bg-primary px-0 px-md-5 mb-5">
+      <div class="row align-items-center px-3">
+        <div class="col-lg-6 text-center text-lg-left">
+        <!--  <h4 class="text-white mb-4 mt-5 mt-lg-0" style="padding:25px;font-family: Times New Roman, Times, serif;">Air Quality Index</h4>-->
+          <h1 class="display-3 font-weight-bold text-white" style="font-family: Times New Roman, Times, serif; font-size: 50px;">
+            Air Quality Monitoring
+          </h1>
+          <p  id=about class="text-white mb-4">
+                The Air Quality Index (AQI) is used for reporting daily air quality.
+            It tells you how clean or polluted your air is, and what associated health effects might be a concern for you.
+            The AQI focuses on health effects you may experience within a few hours or days after breathing polluted air.
+          </p>
+          <br>
+          <br>
+          <div class="card-location" style="color:#000080;">
+            <p class="card-location-time">Last Updated:                                    17 Oct 2024, 01:48pm                                </p>
+          </div>
+          <a href="{% url 'map_view' %}" class="btn btn-secondary mt-1 py-3 px-5" >CHECK AQI MAP</a>
+        </div>
+
+        <div class="col-lg-6 text-center text-lg-right">
+
+          <img class="img-fluid mt-5" src="{% static 'img/Dangers.jpg' %}" style="height:400px;width:550px;margin-bottom: 80px;border-radius: 20px;opacity: 0.9;" alt="" />
+        <h2 style="margin-top: 10px; font-family: Times New Roman, Times, serif;"> Be a part of the solution not a part of pollution</h2></div>
+      </div>
+    </div>
+   <!-- <div class="additional-info">
+            <div class="most-polluted">
+                <h2>Most Polluted Cities in kerala</h2>
+                <table class="table table-striped">
+                    <tr><th>Rank</th><th>LOCATION</th><th>AQI-kerala</th></tr>
+                    <tr><td>1</td><td> Adi shankara Institute of E ngineering and Technology,Ernakulam</td><td><button type="button" class="btn btn-primary">68</button></td></tr>
+                    <tr><td>2</td><td>Matoor,Ernakulam</td><td><button type="button" class="btn btn-primary">83</button></td></tr>
+                     <tr><td>3</td><td>Marotichodu community Hall,Ernakulam</td><td><button type="button" class="btn btn-primary">71</button></td></tr>
+                     <tr><td>4</td><td>kaipatoor,Ernakulam</td><td><button type="button" class="btn btn-primary">72</button></td></tr>
+                        <tr><td>5</td><td>kalady panchayat office,Ernakulam</td><td><button type="button" class="btn btn-primary">72</button></td></tr>
+                     Add more rows as needed
+                </table>
+            </div>-->
+
+    <!-- Header End -->
+
+    <!-- Facilities Start -->
+
+        <section class="city-ranking">
+            <h2 style="margin-top: 40px;margin-left: 30px;">Most Polluted stations in kalady</h2>
+            <table>
+                <table id="ranks" style="width: 50%;margin-left: 25px;margin-top: 20px;">
+                    <tr><th>Rank</th><th>LOCATION</th><th>AQI-kerala</th></tr>
+                  <tr><td>1</td><td>Adi shankara Institute of Engineering and Technology,Ernakulam</td><td><button type="button"  style="width:100%"class="btn btn-primary" onclick="displaydatas()">68</button></td></tr>
+                    <tr><td>2</td><td>Matoor,Ernakulam</td><td><button type="button" style="width:100%" class="btn btn-primary" onclick="displaymatoor()">83</button></td></tr>
+                     <tr><td>3</td><td>Marotichodu community Hall,Ernakulam</td><td><button type="button"   style="width:100%" class="btn btn-primary" onclick="displaymarotichodu()">71</button></td></tr>
+                     <tr><td>4</td><td>kaipatoor,Ernakulam</td><td><button type="button" style="width:100%" class="btn btn-primary" onclick="displaykaipatoor()">72</button></td></tr>
+                        <tr><td>5</td><td>kalady panchayat office,Ernakulam</td><td><button type="button" style="width:100%" class="btn btn-primary" onclick="displaykalady()">72</button></td></tr>
+                    <!-- Add more rows as needed -->
+                </table>
+
+            </table>
+
+
+        </section>
+    <br>
+
+    </div>
+    <section class="current-aqi">
+            <h1>Current Air Quality in Kerala</h1>
+            <div class="aqi-details">
+              <div>
+                <span style="line-height: 0;"><img src="{% static  'img/air.png' %}"
+                                            width="50" height="50" alt="Kerala pm2.5 icon" /></span>
+
+                                    <div class="aqi-box">
+
+                    <span>PM2.5</span>
+                    <p id="pm25">23</p>
+                                    </div>
+
+                </div>
+                <div class="aqi-box">
+                  <span style="line-height: 0;"><img src="{% static  'img/air.png' %}" width="50" height="50" alt="Kerala pm2.5 icon" /></span>
+                 <div>
+                       <span>PM10</span>
+                            <p id="pm10">92</p>
+                    </div>
+
+                  </div>
+              <div class="aqi-box">
+                  <span style="line-height: 0;"><img src="{% static  'img/co2.png' %}" width="50" height="50" alt="Kerala pm2.5 icon" /></span>
+                  <div>
+                    <span>CO2</span>
+                    <p id="co2">34</p>
+                </div>
+                  </div>
+                <div class="aqi-box">
+                  <span style="line-height: 0;"><img src="{% static  'img/co.png' %}" width="50" height="50" alt="Kerala pm2.5 icon" /></span>
+                  <div>
+                    <span>CO</span>
+                    <p id="co">734</p>
+                </div>
+                  </div>
+                <div class="aqi-box">
+                  <span style="line-height: 0;"><img src="{% static  'img/ozone.png' %}" width="50" height="50" alt="Kerala pm2.5 icon" /></span>
+                  <div>
+                    <span>Ozone</span>
+                    <p id="ozone">{{data_value}}</p>
+                </div>
+                </div>
+                <div class="aqi-box">
+                  <span style="line-height: 0;"><img src="{% static  'img/no2.png' %}" width="50" height="50" alt="Kerala pm2.5 icon" /></span>
+                  <div>
+                    <span>NO2</span>
+                    <p id="no2">3</p>
+                </div>
+                </div>
+            </div>
+            <p>The current PM2.5 concentration in Kerala is 1.5 times above the recommended limit given by the WHO 24 hrs air quality guidelines value.</p>
+        </section>
+        <br>
+    <script>
+function displaydatas() {
+  document.getElementById("pm25").innerHTML = 25 ;
+  document.getElementById("pm10").innerHTML = 65 ;
+  document.getElementById("co2").innerHTML = 33 ;
+  document.getElementById("co").innerHTML = 700 ;
+  document.getElementById("no2").innerHTML = 7 ;
+  document.getElementById("ozone").innerHTML = 4 ;
+}
+
+    </script>
+    <script>
+function displaymatoor() {
+  document.getElementById("pm25").innerHTML = 26 ;
+  document.getElementById("pm10").innerHTML = 63 ;
+  document.getElementById("co2").innerHTML = 34 ;
+  document.getElementById("co").innerHTML = 690 ;
+  document.getElementById("no2").innerHTML = 9 ;
+  document.getElementById("ozone").innerHTML = 5 ;
+}
+    </script>
+    <script>
+function displaymarotichodu() {
+  document.getElementById("pm25").innerHTML = 28 ;
+  document.getElementById("pm10").innerHTML = 65 ;
+  document.getElementById("co2").innerHTML = 35 ;
+  document.getElementById("co").innerHTML = 90 ;
+  document.getElementById("no2").innerHTML = 7 ;
+  document.getElementById("ozone").innerHTML = 2 ;
+}
+
+</script>
+    <script>
+function displaykaipatoor() {
+  document.getElementById("pm25").innerHTML = 23 ;
+  document.getElementById("pm10").innerHTML = 67 ;
+  document.getElementById("co2").innerHTML = 36 ;
+  document.getElementById("co").innerHTML = 10 ;
+  document.getElementById("no2").innerHTML = 6 ;
+  document.getElementById("ozone").innerHTML = 3 ;
+}
+
+</script>
+    <script>
+function displaykalady() {
+  document.getElementById("pm25").innerHTML = 27 ;
+  document.getElementById("pm10").innerHTML = 6 ;
+  document.getElementById("co2").innerHTML = 33 ;
+  document.getElementById("co").innerHTML = 480 ;
+  document.getElementById("no2").innerHTML = 4 ;
+  document.getElementById("ozone").innerHTML = 3 ;
+}
+
+</script>
+    <div class="container-fluid pt-5">
+      <div class="container">
+        <div class="text-center pb-2">
+         <!-- <p class="section-title px-5">
+            <span class="px-2">Latest Blog</span>
+          </p>-->
+          <h1 class="mb-4">REAL TIME AIR QUALITY INDEX</h1>
+        </div>
+        <div class="row">
+         <!-- <div class="col-lg-4 mb-4">
+            <div class="card border-0 shadow-sm mb-2">
+              <img class="card-img-top mb-2" src="{% static 'img/forecast1.png' %}" alt="" />
+              <div class="card-body bg-light text-center p-4">
+                <h4 class=""> AQI FORECASTING</h4>
+                <div class="d-flex justify-content-center mb-3">
+                  <small class="mr-3"
+                    ><i class="fa fa-user text-primary"></i> Admin</small
+                  >
+                  <small class="mr-3"
+                    ><i class="fa fa-folder text-primary"></i> Web Design</small
+                  >
+                  <small class="mr-3"
+                    ><i class="fa fa-comments text-primary"></i> 15</small
+                  >
+                </div>-->
+              <!--  <p>
+                  AQI forecasting involves predicting future air quality levels based on historical data,
+                  current pollutant concentrations, and meteorological conditions
+                </p>
+                <a href="{% url 'air_quality_graph' %}"  class="btn btn-primary px-4 mx-auto my-2"
+                  >Air Quality Graph</a
+                >
+              </div>
+            </div>
+          </div>-->
+          <div class="col">
+            <div class="card border-0 shadow-sm mb-2">
+              <img class="card-img-top mb-2" src="{% static 'img/personalized.png' %}" alt="" />
+              <div class="card-body bg-light text-center p-4">
+                <h4 class="">personalized AQI forecast</h4>
+              <!--  <div class="d-flex justify-content-center mb-3">
+                  <small class="mr-3"
+                    ><i class="fa fa-user text-primary"></i> Admin</small
+                  >
+                  <small class="mr-3"
+                    ><i class="fa fa-folder text-primary"></i> Web Design</small
+                  >
+                  <small class="mr-3"
+                    ><i class="fa fa-comments text-primary"></i> 15</small
+                  >
+                </div>-->
+                <p>
+                 This forecast can be customized based on various factors such as
+                  geographic location, time of the day, local environmental conditions, and user-defined criteria.
+                </p>
+                <a href="{% url 'AQI_forecast' %}"  class="btn btn-primary px-4 mx-auto my-2"
+                  >AQI Forecast</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card border-0 shadow-sm mb-2">
+              <img class="card-img-top mb-2" src="{% static 'img/risk.png' %}" alt="" />
+              <div class="card-body bg-light text-center p-4">
+                <h4 class="">Personalized Health risk Assessment</h4>
+             <!--   <div class="d-flex justify-content-center mb-3">
+                  <small class="mr-3"
+                    ><i class="fa fa-user text-primary"></i> Admin</small
+                  >
+                  <small class="mr-3"
+                    ><i class="fa fa-folder text-primary"></i> Web Design</small
+                  >
+                  <small class="mr-3"
+                    ><i class="fa fa-comments text-primary"></i> 15</small
+                  >
+                </div>-->
+                <p>
+                  A personalized risk assessment in the context of air quality and AQI (Air Quality Index) forecasting involves evaluating the potential health risks associated with air pollution for specific individuals or groups.
+                </p>
+                <a href="{% url 'risk_assessment' %}" class="btn btn-primary px-4 mx-auto my-2"
+                  >Risk Assessment</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <h3 class="card-product-text" style="text-align: center;">Air Quality in Kerala</h3>
+    <div class="container-fluid pt-5">
+      <div class="container pb-3">
+        <div class="row">
+          <div class="col-lg-4 col-md-6 pb-1">
+            <div
+              class="d-flex bg-light shadow-sm border-top rounded mb-4"
+              style="padding: 30px"
+            >
+              <!--<i
+                class="flaticon-050-fence h1 font-weight-normal text-primary mb-3"
+              ></i>-->
+              <i class="fi fi-rr-air-pollution text-primary mb-3 "></i>
+              <div class="pl-4">
+                <h4>AQI Indexes</h4>
+                <p class="m-0">
+                 An air quality index (AQI) is the scale by which a certain provider categorizes different air quality levels.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 pb-1">
+            <div
+              class="d-flex bg-light shadow-sm border-top rounded mb-4"
+              style="padding: 30px"
+            >
+              <i
+                class="flaticon-022-drum h1 font-weight-normal text-primary mb-3"
+              ></i>
+              <div class="pl-4">
+                <h4>Pollutants</h4>
+                <p class="m-0">
+                 Pollutants are particles and gasses in the air that, in high concentration, can be harmful to people's health.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 pb-1">
+            <div
+              class="d-flex bg-light shadow-sm border-top rounded mb-4"
+              style="padding: 30px"
+            >
+              <i
+                class="flaticon-030-crayons h1 font-weight-normal text-primary mb-3"
+              ></i>
+              <div class="pl-4">
+                <h4>Health recommendations</h4>
+                <p class="m-0">
+                  Health recommendations are health advice and recommended actions for current air quality conditions.
+                </p>
+              </div>
+            </div>
+          </div>
+
+    <div
+      class="container-fluid bg-secondary text-white mt-5 py-5 px-sm-3 px-md-5"
+    >
+      <div class="row pt-5">
+        <div class="col-lg-3 col-md-6 mb-5">
+          <a
+            href="#about"
+            class="navbar-brand font-weight-bold text-primary m-0 mb-4 p-0"
+            style="font-size: 40px; line-height: 40px"
+          >
+          <!--  <i class="flaticon-043-teddy-bear"></i>-->
+             <img src="{% static 'image1.jpg' %}" alt="AQI Logo" class="img-fluid" style="height:50px;">
+            <span class="text-white">AQI</span>
+          </a>
+          <p id="contact">
+            The Air Quality Index (AQI) is a numerical scale used to communicate the quality of air in a specific area.
+            It provides a way to assess how clean or polluted the air is, along with the potential health effects that may be experienced within a few hours or days after breathing polluted air.
+          </p>
+          <div class="d-flex justify-content-start mt-4">
+            <a
+              class="btn btn-outline-primary rounded-circle text-center mr-2 px-0"
+              style="width: 38px; height: 38px"
+              href="#"
+              ><i class="fab fa-twitter"></i
+            ></a>
+            <a
+              class="btn btn-outline-primary rounded-circle text-center mr-2 px-0"
+              style="width: 38px; height: 38px"
+              href="#"
+              ><i class="fab fa-facebook-f"></i
+            ></a>
+            <a
+              class="btn btn-outline-primary rounded-circle text-center mr-2 px-0"
+              style="width: 38px; height: 38px"
+              href="#"
+              ><i class="fab fa-linkedin-in"></i
+            ></a>
+            <a
+              class="btn btn-outline-primary rounded-circle text-center mr-2 px-0"
+              style="width: 38px; height: 38px"
+              href="#"
+              ><i class="fab fa-instagram"></i
+            ></a>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-5">
+          <h3 class="text-primary mb-4">Get In Touch</h3>
+          <div class="d-flex">
+            <h4 class="fa fa-map-marker-alt text-primary"></h4>
+            <div class="pl-3">
+              <h5 class="text-white">Address</h5>
+              <p>Vidya Bharathi Nagar, Mattoor, Kalady</p>
+              <p>Ernakulam, Kerala 683574</p>
+            </div>
+          </div>
+          <div class="d-flex">
+            <h4 class="fa fa-envelope text-primary"></h4>
+            <div class="pl-3">
+              <h5 class="text-white">Email</h5>
+              <p>aiiot@adishankara.ac.in</p>
+            </div>
+          </div>
+          <div class="d-flex">
+            <h4 class="fa fa-phone-alt text-primary"></h4>
+            <div class="pl-3">
+              <h5 class="text-white">Phone</h5>
+              <p>0484 246 3825</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-5">
+          <h3 class="text-primary mb-4">Quick Links</h3>
+          <div class="d-flex flex-column justify-content-start">
+            <a class="text-white mb-2" href="#"
+              ><i class="fa fa-angle-right mr-2"></i>Home</a
+            >
+            <a class="text-white mb-2" href="#"
+              ><i class="fa fa-angle-right mr-2"></i>About Us</a
+            >
+            <a class="text-white mb-2" href="#"
+              ><i class="fa fa-angle-right mr-2"></i>services</a
+            >
+            <a class="text-white mb-2" href="#"
+              ><i class="fa fa-angle-right mr-2"></i>images</a
+            >
+         <!--   <a class="text-white mb-2" href="#"
+              ><i class="fa fa-angle-right mr-2"></i>Our Blog</a
+            >
+            <a class="text-white" href="#"
+              ><i class="fa fa-angle-right mr-2"></i>Contact Us</a
+            >-->
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-5">
+          <h3 class="text-primary mb-4">Registration</h3>
+          <form action="">
+            <div class="form-group">
+              <input
+                type="text"
+                class="form-control border-0 py-4"
+                placeholder="Your Name"
+                required="required"
+              />
+            </div>
+            <div class="form-group">
+              <input
+                type="email"
+                class="form-control border-0 py-4"
+                placeholder="Your Email"
+                required="required"
+              />
+            </div>
+            <div>
+              <button
+                class="btn btn-primary btn-block border-0 py-3"
+                type="submit"
+              >
+                Submit Now
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div
+        class="container-fluid pt-5"
+        style="border-top: 1px solid rgba(23, 162, 184, 0.2) ;"
+      >
+        <p class="m-0 text-center text-white">
+          &copy;
+          <a class="text-primary font-weight-bold" href="#">2024 AQI All Rights Reserved</a>.
+
+          <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+         <!-- Designed by
+          <a class="text-primary font-weight-bold" href="https://htmlcodex.com"
+            >AQI MONITORING</a
+          >
+          <br />Distributed By:
+          <a href="https://themewagon.com" target="_blank"></a>-->
+        </p>
+      </div>
+    </div>
+
+    <!-- Footer End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary p-3 back-to-top"
+      ><i class="fa fa-angle-double-up"></i
+    ></a>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'lib/isotope/isotope.pkgd.min.js' %}"></script>
+    <script src="{% static 'lib/lightbox/js/lightbox.min.js' %}"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="{% static 'mail/jqBootstrapValidation.min.js' %}"></script>
+    <script src="{% static 'mail/contact.js' %}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

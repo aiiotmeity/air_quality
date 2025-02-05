@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced User Profile Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1d4ed8;
+            --success-color: #10b981;
+            --warning-color: #ef4444;
+            --bg-gradient: white;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --glass-effect: backdrop-filter: blur(10px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.95), rgba(29, 78, 216, 0.95));
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .profile-image {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05);
+        }
+
+        .header-info {
+            color: white;
+        }
+
+        .header-info h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .location {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .metrics-grid {
+            display: flex;
+            grid-template-columns: repeat(7, 1fr); gap: 20px;
+            flex-wrap: nowrap;
+            justify-content: space-between; gap: 10px;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .metric-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            height:170px;
+        }
+
+        .metric-label {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 1rem 0;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .action-button {
+            background: var(--card-bg);
+            border: none;
+            padding: 1.25rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.1rem;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--card-shadow);
+        }
+
+        .action-button:hover {
+            transform: translateY(-3px);
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .action-button i {
+            font-size: 1.5rem;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .weather-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .weather-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .weather-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .weather-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .weather-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #334155;
+            margin: 0.5rem 0;
+        }
+
+        .weather-label {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        .temp-unit-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .temp-unit-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f1f5f9;
+        }
+
+        .temp-unit-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .aqi-meter {
+            width: 200px;
+            height: 200px;
+            margin: 2rem auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: conic-gradient(
+                from 0deg,
+                #4ade80 0%,
+                #fbbf24 50%,
+                #ef4444 100%
+            );
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .aqi-meter:hover {
+            transform: scale(1.05);
+        }
+
+        .aqi-meter::before {
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .aqi-value {
+            position: relative;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+
+            .profile-section {
+                flex-direction: column;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation classes */
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+.nav-link {
+    display: inline-block;
+    padding: 5px 20px;
+    font-size: 12px;
+    color: black; /* Text color */
+    background-color: white; /* Background color */
+    border: 2px solid #ccc; /* Border around the link */
+    border-radius: 15px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+    text-align: center;
+    cursor: pointer;
+}
+
+.nav-link i {
+    margin-right: 2px; /* Space between the icon and text */
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="profile-section">
+                <div class="profile-image animate-pulse">
+                    <i class="fas fa-user-circle fa-3x"></i>
+                </div>
+                <div class="header-info">
+                    <h1>Welcome , {{ request.session.name }}!</h1>
+                    <div class="location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span id="location-span">Loading...</span>
+                </div>
+
+                </div>
+            </div>
+            <div class="header-info">
+               <h2 id="aqi" class="aqi-container">
+                <i class="fas fa-wind" aria-hidden="true"></i>
+                <span class="aqi-label">AQI:</span>
+                <span >{{ highest_sub_index }}</span>
+            </h2>
+
+                <div >
+           Last updated:  <span  id="date">{{ latest_item.date|default:"N/A" }}</span>
+                    <a href="{% url 'logout' %}" class="nav-link" style="color:black;background:white;">
+                    <i class="fas fa-sign-in-alt"></i> Logout
+                    </a>
+        </div>
+            </div>
+        </div>
+       <div class="metrics-grid">
+    <div class="metric-card animate-float">
+        <i class="fas fa-flask"></i>
+        <h3>NH3</h3>
+        <div class="metric-content">
+            NH3: <span class="metric-value" id="nh3">{{ latest_item.nh3|default:"N/A" }}</span>
+        </div>
+        <div class="metric-label">Ammonia</div>
+    </div>
+    <div class="metric-card animate-float">
+        <i class="fas fa-sun"></i>
+        <h3>O3</h3>
+        <div class="metric-content">
+            O3: <span class="metric-value" id="o3">{{ latest_item.o3|default:"N/A" }}</span>
+        </div>
+        <div class="metric-label">Ozone</div>
+    </div>
+    <div class="metric-card animate-float">
+        <i class="fas fa-industry"></i>
+        <h3>SO2</h3>
+        <div class="metric-content">
+            SO2: <span class="metric-value" id="so2">{{ latest_item.so2|default:"N/A" }}</span>
+        </div>
+        <div class="metric-label">Sulfur Dioxide</div>
+    </div>
+    <div class="metric-card animate-float">
+        <i class="fas fa-cloud"></i>
+        <h3>CO</h3>
+        <div class="metric-content">
+            CO: <span class="metric-value" id="co">{{ latest_item.co|default:"N/A" }}</span>
+        </div>
+        <div class="metric-label">Carbon Monoxide</div>
+    </div>
+    <div class="metric-card animate-float">
+        <i class="fas fa-smog"></i>
+        <h3>NO2</h3>
+        <div class="metric-content">
+            NO2: <span class="metric-value" id="no2">{{ latest_item.no2|default:"N/A" }}</span>
+        </div>
+        <div class="metric-label">Nitrogen Dioxide</div>
+    </div>
+    <div class="metric-card animate-float">
+        <i class="fas fa-seedling"></i>
+        <h3>PM2.5</h3>
+        <div class="metric-content">
+            PM2.5: <span class="metric-value" id="pm25">{{ latest_item.pm25|default:"N/A" }}</span>
+        </div>
+        <div class="metric-label">PM2.5</div>
+    </div>
+    <div class="metric-card animate-float">
+        <i class="fas fa-leaf"></i>
+        <h3>PM10</h3>
+        <div class="metric-content">
+            PM10: <span class="metric-value" id="pm10">{{ latest_item.pm10|default:"N/A" }}</span>
+        </div>
+        <div class="metric-label">PM10</div>
+    </div>
+</div>
+        <div class="actions-grid">
+         <button class="action-button" onclick="window.location.href='{% url 'health_questions' username=request.session.name %}'">
+    <i class="fas fa-notes-medical"></i>
+    Update Health Record
+</button>
+            <button class="action-button">
+    <a href="{% url 'health_report' %}" style="text-decoration: none; color: inherit;">Personal Health Report</a>
+</button>
+                  <button class="action-button">
+                      <i class="fas fa-chart-line"></i>
+            <a href="{% url 'AQI_forecast' %}" style="text-decoration: none; color: inherit;" >
+                 AQI Forecast
+            </a>
+        </button>
+
+            <button class="action-button">
+                <i class="fas fa-user-plus"></i>
+                Add Family Member
+            </button>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3><i class="fas fa-wind"></i> Air Quality Index</h3>
+                </div>
+                <div class="aqi-meter">
+                    <div class="aqi-value"> {{ highest_sub_index }}</div>
+                </div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3><i class="fas fa-map-marked-alt"></i> Location</h3>
+                </div>
+                <div id="map" style="height: 350px; border-radius: 8px;"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 style="font-size: 24px; font-weight: bold; color: #333;">
+            <i class="fas fa-heartbeat" style="color: #ff4757; margin-right: 8px;"></i> Health Status
+        </h3>
+                </div>
+                 <div class="health-chart" style="
+        height: 300px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f9f9f9;
+        border: 1px dashed #ccc;
+        border-radius: 8px;
+        color: #aaa;
+        font-size: 18px;">
+        <!-- Placeholder for the chart -->
+         <canvas id="healthScoreChart"></canvas>
+    </div>
+                <div style="text-align: center; margin-top: 20px;">
+        <button id="health-score-btn" class="btn btn-success" style="font-size: 20px;
+            padding: 15px 30px;
+            border-radius: 50px;
+            background-color: green;
+            color: var(--btn-primary-color, #fff);
+            border: none;
+            box-shadow: var(--btn-shadow, 0px 4px 6px rgba(0, 0, 0, 0.1));
+            transition: background-color 0.3s ease;">
+            <span id="health-score-value">Your Score: {{ health_score }}</span>
+        </button>
+                      <p>
+        {% if health_score <= 50 %}
+            <span style="color: green;">You are in excellent health.</span>
+        {% elif health_score <= 80 %}
+            <span style="color: lightgreen;">You are in good health. Maintain your lifestyle.</span>
+        {% elif health_score <= 120 %}
+            <span style="color: purple;">Moderate: Some areas need attention. Consider improving your habits.</span>
+        {% elif health_score <= 150 %}
+            <span style="color: orange;">Warning: Some areas require serious attention. Consult a healthcare professional.</span>
+        {% elif health_score <= 200 %}
+            <span style="color: red;">High health risks detected. Please seek immediate medical advice.</span>
+        {% else %}
+            <span style="color: darkred;">Critical: Severe health risks detected. Immediate medical intervention is necessary.</span>
+    {% endif %}
+</p>
+
+                </div>
+    </div>
+        </div>
+
+        <div class="weather-grid">
+            <div class="weather-card animate-float">
+                <i class="fas fa-temperature-high weather-icon"></i>
+                <div class="weather-value" id="temp"> {{ latest_item.temp|default:"N/A" }} °C</div>
+                <div class="weather-label">Temperature</div>
+                <div class="temp-unit-toggle">
+                    <button class="temp-unit-btn active" data-unit="C">°C</button>
+                    <button class="temp-unit-btn" data-unit="F">°F</button>
+                </div>
+            </div>
+
+            <div class="weather-card animate-float" style="animation-delay: 0.2s">
+                <i class="fas fa-tint weather-icon"></i>
+                <div class="weather-value" id="hum">{{ latest_item.hum|default:"N/A" }} %</div>
+                <div class="weather-label">Humidity</div>
+            </div>
+
+            <div class="weather-card animate-float" style="animation-delay: 0.4s">
+                <i class="fas fa-compress-alt weather-icon"></i>
+                <div class="weather-value" id="pre">{{ latest_item.pre|default:"N/A" }}hPa</div>
+                <div class="weather-label">Pressure</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://unpkg.com/leaflet"></script>
+
+<script>
+  // Initialize the map with a predefined location (fallback if geolocation fails)
+  const defaultLocation = [10.009218469856371, 76.36175573929268]; // Default location
+  const map = L.map('map').setView(defaultLocation, 15);
+
+  // Add OpenStreetMap tile layer
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Try to get the user's location
+  if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+          async (position) => {
+              const lat = position.coords.latitude;
+              const lng = position.coords.longitude;
+
+              // Log coordinates to console for debugging
+              console.log("Latitude:", lat, "Longitude:", lng);
+
+              // Update map view to user's location
+              map.setView([lat, lng], 15);
+
+              // Add a marker for the user's location
+              const marker = L.marker([lat, lng]).addTo(map);
+              marker.bindPopup('You are here!').openPopup();
+
+              // Reverse geocoding to get human-readable address
+              try {
+                  const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
+                  const data = await response.json();
+                  const location = data.display_name || `Lat: ${lat}, Lng: ${lng}`; // Fallback if no address
+                  document.getElementById("location-span").textContent = location;
+
+                  // Optionally update the icon color
+                  document.querySelector('.fa-map-marker-alt').style.color = 'green';
+              } catch (error) {
+                  console.error("Error fetching location:", error);
+                  document.getElementById("location-span").textContent = "Error fetching location";
+              }
+          },
+          (error) => {
+              console.error("Error getting location:", error.messag);
+              alert("Unable to fetch your location. Please ensure location services are enabled.");
+              document.getElementById("location-span").textContent = "Unable to determine location";
+
+              // In case of error, keep map centered at default location
+              map.setView(defaultLocation, 15);
+          }
+      );
+  } else {
+      alert("Geolocation is not supported by your browser.");
+      document.getElementById("location-span").textContent = "Geolocation not supported";
+
+      // In case geolocation is not supported, keep map centered at default location
+      map.setView(defaultLocation, 15);
+  }
+
+  // AJAX function to fetch the latest data
+  function fetchLatestData() {
+    $.ajax({
+      url: "{% url 'risk_assessment' %}", // Ensure the URL matches your Django URL configuration
+      type: "GET",
+      dataType: "json",
+      headers: { "X-Requested-With": "XMLHttpRequest" }, // Indicate it's an AJAX request
+      success: function(data) {
+        console.log("AJAX success:", data); // Debugging
+        if (data.latest_item) {
+          updateAqiContainer(data.latest_item);
+        } else {
+          console.error("No data found in response.");
+        }
+      },
+      error: function(xhr, status, error) {
+        console.error("AJAX error:", error);
+      }
+    });
+  }
+
+  // Function to update AQI container
+  function updateAqiContainer(latestItem) {
+    $('#received-at').text(latestItem.received_at || 'N/A');
+
+    $('#nh3').text(latestItem.nh3 || 'N/A' );
+    $('#o3').text(latestItem.o3 || 'N/A');
+    $('#so2').text(latestItem.so2 || 'N/A');
+    $('#co').text(latestItem.co || 'N/A');
+    $('#no2').text(latestItem.no2 || 'N/A');
+    $('#pm10').text(latestItem.pm10 || 'N/A');
+    $('#pm25').text(latestItem.pm25 || 'N/A');
+    $('#date').text(latestItem.date || 'N/A');
+    $('#temp').text((latestItem.temp ? latestItem.temp + ' °C' : 'N/A'));
+$('#hum').text((latestItem.hum ? latestItem.hum + ' %' : 'N/A'));
+$('#pre').text((latestItem.pre ? latestItem.pre + ' hPa' : 'N/A'));
+
+
+
+
+
+
+
+    const aqiValue = parseInt(latestItem.aqi || 0, 10);
+    const aqiStatusElement = $('.aqi-status');
+    const aqiIconElement = $('.aqi-container i');
+
+    if (aqiValue <= 50) {
+      aqiStatusElement.text('AQI - GOOD');
+      aqiIconElement.attr('class', 'fas fa-smile').css('color', '#2ecc71');
+    } else if (aqiValue <= 100) {
+      aqiStatusElement.text('AQI - MODERATE');
+      aqiIconElement.attr('class', 'fas fa-meh').css('color', '#f1c40f');
+    } else {
+      aqiStatusElement.text('AQI - POOR');
+      aqiIconElement.attr('class', 'fas fa-frown').css('color', '#e74c3c');
+    }
+  }
+
+  // Fetch data every 5 seconds
+  setInterval(fetchLatestData, 5000);
+
+  // Fetch data on page load
+  $(document).ready(function() {
+    fetchLatestData();
+  });
+
+  // Get health score from Django context
+  const healthScore = {{ health_score }}; // Assuming health_score is passed from Django view
+
+  // Chart.js Data and Options
+  const ctx = document.getElementById('healthScoreChart').getContext('2d');
+  const healthScoreChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Health Score'],
+      datasets: [{
+        label: 'Health Score',
+        data: [healthScore],
+        backgroundColor: '#4caf50',
+        borderColor: '#388e3c',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 100,  // Assuming health score is out of 100
+        }
+      }
+    }
+  });
+
+</script>
+
+</body>
+</html>

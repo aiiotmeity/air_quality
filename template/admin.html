@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    <title>Dashboard UI</title>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">AQI</div>
+        <input type="text" placeholder="Search for..." class="search-bar"/>
+        <nav>
+            <ul>
+                <li class="active">Dashboard</li>
+                <li><a href="#airQualityChart" style="text-decoration: none; color: inherit;">Data Representaion</a></li>
+
+              <!--  <li>Users</li>
+
+                <li>Authentication</li>
+                <li>Settings</li>-->
+
+            </ul>
+        </nav>
+        <div class="profile">
+            <img src="{% static 'img/asiet.jpeg' %}"    alt="Profile Picture"/>
+
+            <div>
+                <h3>AIIOT</h3>
+                <p>ASIET</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header>
+             <h2>AIR QUALITY MONITORING SYSTEM</h2>
+             <!-- <p>Latest Data fetched on:<span id="fetch_date">{{ latest_date }}</span></p>
+              <p><span id="fetch_timestamp">{{ latest_time }}</span></p>-->
+            <div class="user-info">
+                <!--<img src="flag-icon.png" alt="Flag"/>-->
+                <img src="{% static 'img/DASHBOARD LOGO.jpg' %}"  style="height:50px;width:50px;border-radius: 70%;" alt="Notification"/>
+                <span>AQI</span>
+            </div>
+        </header>
+
+      <div class="cards">
+    <div class="card">
+        <h3>AIR QUALITY INDEX</h3>
+        <p>AQI: <span id="latest_aqi" style="font-size: 30px;">{{ latest_aqi }}</span></p>
+    </div>
+    <div class="card">
+        <h3>TEMPERATURE</h3>
+        <p class="value" id="latest_temperature">{{ latest_temperature }}°C</p>
+    </div>
+    <div class="card">
+        <h3>HUMIDITY</h3>
+        <p class="value" id="latest_humidity">{{ latest_humidity }}</p>
+    </div>
+    <div class="card">
+        <h3>PRESSURE</h3>
+        <p class="value" id="latest_pressure">{{ latest_pressure }} mb</p>
+    </div>
+</div>
+
+<div class="cards">
+    <div class="card">
+        <div class="header" style="display: flex; align-items: center;">
+            <h3 style="margin: 0;">NH3</h3>
+            <img src="{% static 'img/nh3.png' %}" alt="NH3 Image" class="card-image">
+        </div>
+        <p>NH3 Level: <span id="latest_nh3" style="font-size: 30px;">{{ latest_nh3 }} µg/m3</span></p>
+    </div>
+    <div class="card">
+        <div class="header" style="display: flex; align-items: center;">
+            <h3 style="margin: 0;">O3</h3>
+            <img src="{% static 'img/ozone.png' %}" alt="Ozone Image" class="card-image">
+        </div>
+        <p>O3 Level: <span id="latest_o3" style="font-size: 30px;">{{ latest_o3 }} µg/m3</span></p>
+    </div>
+</div>
+
+<div class="cards">
+    <div class="card">
+        <div class="header" style="display: flex; align-items: center;">
+            <h3 style="margin: 0;">PM10</h3>
+            <img src="{% static 'img/pm10.png' %}" alt="PM10 Image" class="card-image">
+        </div>
+        <p>PM10 Level: <span id="latest_pm10" style="font-size: 30px;">{{ latest_pm10 }} µg/m3</span></p>
+    </div>
+    <div class="card">
+        <div class="header" style="display: flex; align-items: center;">
+            <h3 style="margin: 0;">PM2.5</h3>
+            <img src="{% static 'img/pm25.png' %}" alt="PM2.5 Image" class="card-image">
+        </div>
+        <p>PM2.5 Level: <span id="latest_pm25" style="font-size: 30px;">{{ latest_pm25 }} µg/m3</span></p>
+    </div>
+    <div class="card">
+        <h3>SO2</h3>
+        <p>SO2 Level: <span id="latest_so2" style="font-size: 30px;">{{ latest_so2 }} µg/m3</span></p>
+    </div>
+</div>
+
+        <br>
+        <br>
+        <div class="chart-container" style="width: 100%; max-width: 1000px; margin: 0 auto;">
+    <canvas id="airQualityChart"></canvas>
+</div>
+        <br>
+        <br>
+<br><div class="container my-5">
+    <!-- Row 1 -->
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header text-center font-weight-bold">PM10 Levels</div>
+                <div class="card-body">
+                    <canvas id="pm10Chart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header text-center font-weight-bold">AQI Levels</div>
+                <div class="card-body">
+                    <canvas id="aqiChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header text-center font-weight-bold">NH3 Levels</div>
+                <div class="card-body">
+                    <canvas id="nh3Chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header text-center font-weight-bold">NO2 Levels</div>
+                <div class="card-body">
+                    <canvas id="no2Chart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header text-center font-weight-bold">O3 Levels</div>
+                <div class="card-body">
+                    <canvas id="o3Chart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header text-center font-weight-bold">PM2.5 Levels</div>
+                <div class="card-body">
+                    <canvas id="pm25Chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 3 -->
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header text-center font-weight-bold">SO2 Levels</div>
+                <div class="card-body">
+                    <canvas id="so2Chart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header text-center font-weight-bold">Temperature</div>
+                <div class="card-body">
+                    <canvas id="temperatureChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header text-center font-weight-bold">Humidity</div>
+                <div class="card-body">
+                    <canvas id="humidityChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+        <div class="chart-section">
+            <div class="chart">
+                <h3>Data representations</h3>
+                <div class="donut-chart"></div>
+                <ul class="chart-details">
+                    <li><span class="dot purple"></span>Temperature {{ latest_temperature }}°C</li>
+                    <li><span class="dot blue"></span>Humidity {{ latest_humidity }}%</li>
+                    <li><span class="dot teal"></span>Pressure {{ latest_pressure }}mb</li>
+                </ul>
+            </div>
+
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!--
+<script>
+    // Function to create the initial chart
+    function createChart(data) {
+        var ctx = document.getElementById('airQualityChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['AQI', 'NH3', 'O3', 'PM10', 'PM2.5', 'SO2','Temp','Hum'],
+                datasets: [{
+                    label: 'Air Quality Metrics',
+                    data: [
+                        data.latest_co, data.latest_aqi, data.latest_nh3,
+                        data.latest_no2, data.latest_o3, data.latest_pm10,
+                        data.latest_pm25, data.latest_so2, data.latest_temperature,
+                        data.latest_humidity
+                    ],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Values'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Gases'
+                        }
+                    }
+                }
+            }
+        });
+        return chart;
+    }
+
+    // Function to update the chart with new data
+    function updateChart(chart, data) {
+        chart.data.datasets[0].data = [
+            data.latest_co, data.latest_aqi, data.latest_nh3,
+            data.latest_no2, data.latest_o3, data.latest_pm10,
+            data.latest_pm25, data.latest_so2, data.latest_temperature,
+                        data.latest_humidity
+        ];
+        chart.update();  // Refresh the chart with the new data
+    }
+
+    // Function to update the dashboard values
+    function updateDashboard(data) {
+        $('#latest_co').text(data.latest_co !== null ? data.latest_co + 'mg/m3' : 'N/A');
+        $('#latest_aqi').text(data.latest_aqi !== null ? data.latest_aqi + 'µg/m3' : 'N/A');
+        $('#latest_nh3').text(data.latest_nh3 !== null ? data.latest_nh3 + 'µg/m3' : 'N/A');
+        $('#latest_no2').text(data.latest_no2 !== null ? data.latest_no2 + 'µg/m3' : 'N/A');
+        $('#latest_o3').text(data.latest_o3 !== null ? data.latest_o3 + 'µg/m3' : 'N/A');
+        $('#latest_pm10').text(data.latest_pm10 !== null ? data.latest_pm10 + 'µg/m3' : 'N/A');
+        $('#latest_pm25').text(data.latest_pm25 !== null ? data.latest_pm25 + 'µg/m3' : 'N/A');
+        $('#latest_so2').text(data.latest_so2 !== null ? data.latest_so2 + 'µg/m3' : 'N/A');
+        $('#latest_temperature').text(data.latest_temperature !== null ? data.latest_temperature + '°C' : 'N/A');
+        $('#latest_humidity').text(data.latest_humidity !== null ? data.latest_humidity + ' %' : 'N/A');
+        $('#latest_pressure').text(data.latest_pressure !== null ? data.latest_pressure + 'hPa' : 'N/A');
+        $('#fetch_date').text(data.latest_date !== null ? data.latest_date  : 'N/A');
+        $('#fetch_timestamp').text(data.latest_time !== null ? data.latest_time  : 'N/A');
+    }
+
+    // Initialize the chart
+    var airQualityChart = null;
+
+    // Function to fetch the latest data and update both chart and dashboard
+    function fetchLatestData() {
+        $.ajax({
+            url: "{% url 'fetch_latest_data' %}",  // Ensure this+ 'µg/m3' : 'N/A'); URL resolves correctly
+            type: "GET",  // Use GET as the HTTP method
+            dataType: "json",  // Expect a JSON response
+            success: function(data) {
+                // Update both the dashboard values and the chart data
+                updateDashboard(data);
+
+                if (airQualityChart === null) {
+                    // Create the chart if it hasn't been initialized
+                    airQualityChart = createChart(data);
+                } else {
+                    // Update the existing chart with new data
+                    updateChart(airQualityChart, data);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Failed to fetch data:", status, error);
+            }
+        });
+    }
+
+    // Call fetchLatestData every 5 seconds for dynamic updates
+    $(document).ready(function() {
+        fetchLatestData();  // Initial data fetch when the page loads
+        setInterval(fetchLatestData, 5000);  // Fetch data every 5 seconds
+    });
+</script>
+-->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    // Initialize the main bar chart
+    var airQualityChart = null;
+
+    // Initialize individual charts for each metric
+    var charts = {
+        coChart: null,
+        aqiChart: null,
+        nh3Chart: null,
+        no2Chart: null,
+        o3Chart: null,
+        pm10Chart: null,
+        pm25Chart: null,
+        so2Chart: null,
+        temperatureChart: null,
+        humidityChart: null
+    };
+
+    // Function to create the main bar chart
+    function createMainBarChart(data) {
+        var ctx = document.getElementById('airQualityChart').getContext('2d');
+        return new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['AQI', 'NH3', 'O3', 'PM10', 'PM2.5', 'SO2', 'Temp', 'Hum'],
+                datasets: [{
+                    label: 'Air Quality Metrics',
+                    data: [
+                        data.latest_aqi, data.latest_nh3, data.latest_o3,
+                        data.latest_pm10, data.latest_pm25, data.latest_so2,
+                        data.latest_temperature, data.latest_humidity
+                    ],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'Values' } },
+                    x: { title: { display: true, text: 'Metrics' } }
+                }
+            }
+        });
+    }
+
+    // Function to create a line chart for a specific metric
+    function createLineChart(ctx, label, initialData) {
+        return new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [initialData.latest_date + ' ' + initialData.latest_time],
+                datasets: [{
+                    label: label,
+                    data: [initialData.latest_value],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'Values' } },
+                    x: { title: { display: true, text: 'Date and Time' } }
+                }
+            }
+        });
+    }
+
+    // Function to update the main bar chart with new data
+    function updateMainBarChart(chart, data) {
+        chart.data.datasets[0].data = [
+            data.latest_aqi, data.latest_nh3, data.latest_o3,
+            data.latest_pm10, data.latest_pm25, data.latest_so2,
+            data.latest_temperature, data.latest_humidity
+        ];
+        chart.update();
+    }
+
+    // Function to update a specific line chart with new data
+    function updateLineChart(chart, data, value, date, time) {
+        chart.data.labels.push(date + ' ' + time);
+        chart.data.datasets[0].data.push(value);
+        chart.update();
+    }
+
+    // Function to update dashboard values
+    function updateDashboard(data) {
+        $('#latest_aqi').text(data.latest_aqi + ' µg/m³');
+        $('#latest_nh3').text(data.latest_nh3 + ' µg/m³');
+        $('#latest_o3').text(data.latest_o3 + ' µg/m³');
+        $('#latest_pm10').text(data.latest_pm10 + ' µg/m³');
+        $('#latest_pm25').text(data.latest_pm25 + ' µg/m³');
+        $('#latest_so2').text(data.latest_so2 + ' µg/m³');
+        $('#latest_temperature').text(data.latest_temperature + '°C');
+        $('#latest_humidity').text(data.latest_humidity + '%');
+        $('#fetch_date').text(data.latest_date);
+        $('#fetch_timestamp').text(data.latest_time);
+    }
+
+    // Fetch latest data and update charts
+    function fetchLatestData() {
+        $.ajax({
+            url: "{% url 'fetch_latest_data' %}",
+            type: "GET",
+            dataType: "json",
+            success: function(data) {
+                updateDashboard(data);
+
+                // Update or create the main bar chart
+                if (airQualityChart === null) {
+                    airQualityChart = createMainBarChart(data);
+                } else {
+                    updateMainBarChart(airQualityChart, data);
+                }
+
+                // Update or create each line chart
+                const metrics = [
+
+                    { chart: 'aqiChart', value: data.latest_aqi, label: 'AQI Levels (µg/m³)' },
+                    { chart: 'nh3Chart', value: data.latest_nh3, label: 'NH3 Levels (µg/m³)' },
+                    { chart: 'no2Chart', value: data.latest_no2, label: 'NO2 Levels (µg/m³)' },
+                    { chart: 'o3Chart', value: data.latest_o3, label: 'O3 Levels (µg/m³)' },
+                    { chart: 'pm10Chart', value: data.latest_pm10, label: 'PM10 Levels (µg/m³)' },
+                    { chart: 'pm25Chart', value: data.latest_pm25, label: 'PM2.5 Levels (µg/m³)' },
+                    { chart: 'so2Chart', value: data.latest_so2, label: 'SO2 Levels (µg/m³)' },
+                    { chart: 'temperatureChart', value: data.latest_temperature, label: 'Temperature (°C)' },
+                    { chart: 'humidityChart', value: data.latest_humidity, label: 'Humidity (%)' }
+                ];
+
+                metrics.forEach(metric => {
+                    if (charts[metric.chart] === null) {
+                        charts[metric.chart] = createLineChart(
+                            document.getElementById(metric.chart).getContext('2d'),
+                            metric.label,
+                            data
+                        );
+                    } else {
+                        updateLineChart(
+                            charts[metric.chart],
+                            data,
+                            metric.value,
+                            data.latest_date,
+                            data.latest_time
+                        );
+                    }
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error("Failed to fetch data:", status, error);
+            }
+        });
+    }
+
+    // Initial fetch and set interval for real-time updates
+    $(document).ready(function() {
+        fetchLatestData();
+        setInterval(fetchLatestData, 20000);
+    });
+</script>
+
+
+
+
+
+</div>
+
+    </div>
+
+
+
+</body>
+</html>

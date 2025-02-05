@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Air Quality Map</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0073e6;
+            --secondary-color: #ff6f61;
+            --background-light: #f5f7fa;
+            --text-dark: #333;
+            --text-light: #666;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+
+        .status-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .current-aqi {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .current-aqi-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .aqi-classes {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 0.5rem;
+        }
+
+        .aqi-class {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: white;
+            white-space: nowrap;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .aqi-class:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+            padding-top: 70px; /* Make room for fixed status bar */
+        }
+
+        .map-section {
+            flex: 2;
+            height: calc(100vh - 70px);
+            transition: var(--transition);
+        }
+
+        .aqi-details {
+            flex: 1;
+            min-width: 320px;
+            max-width: 400px;
+            padding: 1.5rem;
+            background: var(--background-light);
+            box-shadow: var(--shadow);
+            overflow-y: auto;
+            height: calc(100vh - 70px);
+            transition: var(--transition);
+        }
+
+        .aqi-index {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .aqi-index span {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .aqi-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: var(--transition);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-card i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        .timestamp {
+            text-align: center;
+            color: var(--text-light);
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .map-section {
+                height: 50vh;
+            }
+
+            .aqi-details {
+                max-width: 100%;
+                height: auto;
+            }
+
+            .status-bar {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 0.5rem;
+            }
+
+            .aqi-classes {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .aqi-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .status-bar-left {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .current-aqi {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <div class="current-aqi">
+                <i class="fas fa-wind"></i>
+                <span class="current-aqi-value" id="status-aqi">--</span>
+                <span id="status-text">Loading...</span>
+            </div>
+        </div>
+        <div class="aqi-classes">
+            <div class="aqi-class" style="background-color: #00e400">Good (0-50)</div>
+            <div class="aqi-class" style="background-color: #ffff00; color: black">Moderate (51-100)</div>
+            <div class="aqi-class" style="background-color: #ff7e00">Unhealthy (101-150)</div>
+            <div class="aqi-class" style="background-color: #ff0000">Severe (151-200)</div>
+            <div class="aqi-class" style="background-color: #8F3F97">Very Severe (201-300)</div>
+            <div class="aqi-class" style="background-color: #7E0023">Hazardous (301+)</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="map" class="map-section"></div>
+        <div class="aqi-details">
+            <div class="aqi-index">
+                <span id="latest_aqi">{{ highest_sub_index }}</span>
+                <div id="aqi-status">Air Quality Index</div>
+            </div>
+
+            <div class="aqi-stats">
+                <div class="stat-card">
+                    <i class="fas fa-seedling"></i>
+                    <div class="stat-value" id="latest_pm25">--</div>
+                    <div class="stat-label">PM2.5</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-smog"></i>
+                    <div class="stat-value" id="latest_pm10">--</div>
+                    <div class="stat-label">PM10</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-industry"></i>
+                    <div class="stat-value" id="latest_so2">--</div>
+                    <div class="stat-label">SO2</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-wind"></i>
+                    <div class="stat-value" id="latest_o3">--</div>
+                    <div class="stat-label">O3</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-car"></i>
+                    <div class="stat-value" id="latest_co">--</div>
+                    <div class="stat-label">CO</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-cloud"></i>
+                    <div class="stat-value" id="latest_no2">--</div>
+                    <div class="stat-label">NO2</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-flask"></i>
+                    <div class="stat-value" id="latest_nh3">--</div>
+                    <div class="stat-label">NH3</div>
+                </div>
+            </div>
+
+            <div class="timestamp">
+                Last Updated: <span id="date">N/A</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+    // Initialize the map with a default view
+    const map = L.map('map').setView([10.171431834489752, 76.44703853958568], 15);
+
+    // Add OpenStreetMap tiles to the map
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Initialize the marker for the location of the Institute
+    const marker = L.marker([10.1784807896795, 76.43041508111203]).addTo(map);
+    marker.bindPopup('Adi Shankara Institute of Engineering and Technology Kaladi');
+
+    // Function to get AQI status based on the value
+    function getAQIStatus(value) {
+        if (value <= 50) return { text: 'Good', color: '#00e400' };
+        if (value <= 100) return { text: 'Moderate', color: '#ffb700' };
+        if (value <= 150) return { text: 'Unhealthy', color: '#ff7e00' };
+        if (value <= 200) return { text: 'Severe', color: '#ff0000' };
+        if (value <= 300) return { text: 'Very Severe', color: '#8F3F97' };
+        return { text: 'Hazardous', color: '#7E0023' };
+    }
+
+    // Function to fetch the latest data from the server
+    function fetchLatestData() {
+        $.ajax({
+            url: "{% url 'map_view' %}",
+            type: "GET",
+            dataType: "json",
+            headers: { "X-Requested-With": "XMLHttpRequest" },
+            success: function(data) {
+                if (data.latest_item) {
+                    updateAqiContainer(data.latest_item,data.highest_sub_index);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX error:", error);
+                alert("Failed to fetch data. Please try again later.");
+            }
+        });
+    }
+
+    // Function to update the AQI container with the latest data
+    function updateAqiContainer(latestItem,highestSubIndex) {
+        $('#received-at').text(latestItem.date || 'N/A');
+        $('#latest_aqi').text(highestSubIndex || 'N/A');
+
+       const aqiValue = parseInt(highestSubIndex || 0, 10);
+
+        const status = getAQIStatus(aqiValue);
+
+        // Update status bar and AQI display
+        $('#status-aqi').text(aqiValue);
+        $('#status-text').text(status.text);
+        $('.current-aqi').css('background-color', status.color + '20');
+        $('#status-aqi').css('color', status.color);
+
+        // Update the main display for AQI
+        $('#latest_aqi').text(aqiValue).css('color', status.color);
+        $('#aqi-status').text(status.text + ' Air Quality');
+
+        // Update other values like PM2.5, PM10, etc.
+        $('#latest_pm25').text(latestItem.pm25 || '--');
+        $('#latest_pm10').text(latestItem.pm10 || '--');
+        $('#latest_so2').text(latestItem.so2 || '--');
+        $('#latest_o3').text(latestItem.o3 || '--');
+        $('#latest_co').text(latestItem.co || '--');
+        $('#latest_no2').text(latestItem.no2 || '--');
+        $('#latest_nh3').text(latestItem.nh3 || '--');
+        $('#date').text(latestItem.date || 'N/A');
+
+        // Update the map marker with AQI value (optional)
+        marker.setPopupContent('Adi Shankara Institute of Engineering and Technology Kaladi<br>AQI: ' + aqiValue);
+    }
+
+    // Fetch data every 5 seconds
+    $(document).ready(function() {
+        fetchLatestData();
+        setInterval(fetchLatestData, 5000);
+    });
+</script>
+
+</body>
+</html>

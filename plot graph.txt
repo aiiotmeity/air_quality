@@ -1,0 +1,68 @@
+  <script>
+   var map = L.map('map').setView([10.171685279189063, 76.44532185763453], 5);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 15,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Load and display CSV data on the map using the omnivore library
+        var data=omnivore.csv('air_pollution/AIRPOLLUTION/AIRPOLLUTION/air_pollution/test_data.csv').addTo(map);
+        var data = omnivore.csv("test_data.csv")
+             .on('ready', function() {
+        // Fit the map bounds to the data
+        map.fitBounds(data.getBounds());
+    })
+
+        var marker = L.marker([10.171685279189063, 76.44532185763453]).addTo(map);
+        var marker1 = L.marker([10.170333569353405, 76.42875653508618]).addTo(map);
+        var circle = L.circle([10.170333569353405, 76.42875653508618], {
+                    color: 'red',
+                    fillColor: '#f03',
+                    fillOpacity: 0.5,
+                    radius: 1000,
+                }).addTo(map);
+        var circle = L.circle([10.171685279189063, 76.44532185763453], {
+                    color: 'red',
+                    fillColor: '#f03',
+                    fillOpacity: 0.5,
+                    radius: 1000,
+                }).addTo(map);
+        marker.bindPopup("<b>kalady!</b><br>AQI 58").openPopup();
+       marker1.bindPopup("<b>Matoor!</b><br>AQI 57").openPopup();
+
+
+</script>
+
+    </div>
+<div  id="graph" style="height: 50%;">
+    {{ graph_div|safe }}
+</div>
+
+
+
+def air_quality_graph(request):
+    csv_path = os.path.join(os.path.dirname(__file__), 'test_data1.csv')
+
+    try:
+        # Read the CSV file, skipping bad lines
+        df = pd.read_csv(csv_path, on_bad_lines='skip')
+
+        # Generate the line graph using Plotly Express
+        df['date_city'] = df['date'] + ' - ' + df['City']
+        
+        fig = px.line(df, x='date_city', y='AQI', title='Air Quality Index (AQI) by City and Date')
+
+        # Convert the figure to HTML for rendering in the template
+        graph_div = fig.to_html(full_html=False)
+
+        # Load additional CSV data if needed (this function can be customized)
+        csv_data = load_csv_data()
+
+        # Render the template with the graph and CSV data
+        return render(request, 'air_quality_graph.html', {'locations': csv_data, 'graph_div': graph_div})
+
+    except pd.errors.ParserError as e:
+        # Handle parsing errors and render an error template
+        return render(request, 'error.html', {'error': str(e)})
+to show 2 different graphs each city  is plotted 2 graphs
